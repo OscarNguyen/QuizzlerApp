@@ -21,7 +21,6 @@ class Questions{
     
 }
 
-class cc{
-    let a = Questions(questionText: "are u gay?", correctAnswer: false)
-    
-}
+
+
+
