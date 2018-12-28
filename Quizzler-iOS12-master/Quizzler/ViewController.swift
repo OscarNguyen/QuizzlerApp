@@ -14,6 +14,9 @@ class ViewController: UIViewController {
     let allQuestions = QuestionBank()
     var pickedAns: Bool = false
     var ans = QuestionBank()
+    var questionNumber: Int = 0
+    var score: Int = 0
+    var progress: Int = 0
     
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var scoreLabel: UILabel!
@@ -23,8 +26,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let question1 = allQuestions.list[0]
-        questionLabel.text = question1.question
+//        let question1 = allQuestions.list[0]
+//        questionLabel.text = question1.question
+        
+        nextQuestion()
         
         
     }
@@ -37,32 +42,79 @@ class ViewController: UIViewController {
         else if sender.tag == 2{
             pickedAns = false
         }
-         print(   checkAnswer(pickedAns))
-    }
-    
-    
-    func updateUI() {
-      
-    }
-    
-
-    func nextQuestion() {
+        checkAnswer()
+        questionNumber+=1
+        nextQuestion()
         
     }
     
     
-    func checkAnswer(_ a: Bool) -> Bool {
-        if a == ans.list[0].answer{
-            return true
+    func updateUI() {
+        scoreLabel.text = "Score: \(score)"
+        progressLabel.text = "\(questionNumber+1)/\(allQuestions.list.count)"
+        progressBar.frame.size.width = (view.frame.size.width/15)*CGFloat(questionNumber+1)
+    }
+    
+
+    func nextQuestion() {
+       
+        
+        if questionNumber <= allQuestions.list.count-1{
+             questionLabel.text = allQuestions.list[questionNumber].question
+            progress+=1
+            updateUI()
+            
+    }
+        else {
+            
+            let alert = UIAlertController(title: "Chương trình tới đây là hết dồi", message: "Chơi lại hen em :v", preferredStyle: .alert)
+            
+            let restartAction = UIAlertAction(title: "Restart", style: .default) { (UIAlertAction) in
+                self.startOver()
+                //self.updateUI()
+            }
+           
+            
+            alert.addAction(restartAction)
+            present(alert, animated: true, completion: nil)
+     }
+           
         }
-        else {return false}
+    
+    
+    func checkAnswer(){
+        
+        if allQuestions.list[questionNumber].answer == pickedAns{
+            ProgressHUD.showSuccess("Chúc mừng em. Đúng oy!!")
+            score+=1
+            
+           
+            
+        }
+        else  {
+            ProgressHUD.showError("Ớ ầu, sai goy sai goy!!!")
+        }
     }
     
     
+//    func checkAnswer(_ a: Bool) -> Bool {
+//        if a == ans.list[0].answer{
+//            return true
+//        }
+//        else {return false}
+//    }
+    
+    
     func startOver() {
-       
+//        if questionNumber > allQuestions.list.count{
+//            print("stop")
+        questionNumber = 0
+        score = 0
+        progress = 0
+        nextQuestion()
+        }
     }
     
 
     
-}
+
